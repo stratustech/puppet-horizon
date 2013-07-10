@@ -86,7 +86,11 @@ class horizon(
 
   include horizon::params
   include apache::mod::wsgi
-  include apache
+  #include apache
+##this is to fix the double handling of httpd.conf 
+ class { 'apache': }
+
+
 
   # I am totally confused by this, I do not think it should be installed...
   if ($::osfamily == 'Debian') {
@@ -126,13 +130,13 @@ class horizon(
     notify  => Service[$::horizon::params::http_service]
   }
 
-  file_line { 'httpd_listen_on_bind_address_80':
-    path    => $::horizon::params::httpd_listen_config_file,
-    match   => '^Listen (.*):?80$',
-    line    => "Listen ${bind_address}:80",
-    require => Package['horizon'],
-    notify  => Service[$::horizon::params::http_service],
-  }
+# file_line { 'httpd_listen_on_bind_address_80':
+#    path    => $::horizon::params::httpd_listen_config_file,
+#    match   => '^Listen (.*):?80$',
+#    line    => "Listen ${bind_address}:80",
+#    require => Package['horizon'],
+#    notify  => Service[$::horizon::params::http_service],
+#  }
 
   if $listen_ssl {
     file_line { 'httpd_listen_on_bind_address_443':
