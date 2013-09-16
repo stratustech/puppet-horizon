@@ -88,7 +88,9 @@ class horizon(
   include apache::mod::wsgi
   #include apache
 ##this is to fix the double handling of httpd.conf 
- class { 'apache': }
+ class { 'apache':
+      default_vhost => false,
+ }
 
 
 
